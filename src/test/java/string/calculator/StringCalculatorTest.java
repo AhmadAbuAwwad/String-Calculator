@@ -1,0 +1,86 @@
+package string.calculator;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import string.calculator.StringCalculator;
+import string.calculator.exception.ErrorMessages;
+import string.calculator.exception.InvalidInputException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class StringCalculatorTest {
+
+    private StringCalculator stringCalculator;
+
+    @BeforeEach
+    public void setUp() {
+        stringCalculator = new StringCalculator();
+    }
+
+    // Step 1
+
+    /**
+     * Tests the add method with an empty string input.
+     * Expected result: Returns 0.
+     */
+    @Test
+    public void testAdd_EmptyString_ReturnsZero() {
+        assertEquals(0, stringCalculator.add(""));
+    }
+
+    /**
+     * Tests the add method with a single number input.
+     * Expected result: Returns the number itself.
+     */
+    @Test
+    public void testAdd_SingleNumber_ReturnsNumber() {
+        assertEquals(5, stringCalculator.add("5"));
+    }
+
+    /**
+     * Tests the add method with two numbers separated by a comma.
+     * Expected result: Returns the sum of the two numbers.
+     */
+    @Test
+    public void testAdd_TwoNumbers_ReturnsSum() {
+        assertEquals(300, stringCalculator.add("100,200"));
+    }
+
+
+    /**
+     * Tests that adding more than two numbers throws an InvalidInputException.
+     * Expected result: Throws InvalidInputException with the appropriate error message.
+     */
+    @Test
+    public void testAdd_MoreThanTwoNumbers_ThrowsInvalidInputException() {
+        Exception exception = assertThrows(InvalidInputException.class, () -> {
+            stringCalculator.add("1,2,3");
+        });
+        assertEquals(ErrorMessages.INVALID_INPUT + "Number of inputs exceeds 2", exception.getMessage());
+    }
+
+    /**
+     * Tests that adding an empty number between commas throws an InvalidInputException.
+     * Expected result: Throws InvalidInputException with the appropriate error message.
+     */
+    @Test
+    public void testAdd_EmptyNumberBetweenCommas_ThrowsInvalidInputException() {
+        Exception exception = assertThrows(InvalidInputException.class, () -> {
+            stringCalculator.add("1,,2");
+        });
+        assertEquals(ErrorMessages.INVALID_INPUT + "Consecutive delimiters found", exception.getMessage());
+    }
+
+    /**
+     * Tests that adding a non-numeric character throws an InvalidInputException.
+     * Expected result: Throws InvalidInputException with the appropriate error message.
+     */
+    @Test
+    public void testAdd_NonNumericCharacter_ThrowsInvalidInputException() {
+        Exception exception = assertThrows(InvalidInputException.class, () -> {
+            stringCalculator.add("1,?");
+        });
+        assertEquals(ErrorMessages.INVALID_INPUT + "Char: ? is not a number", exception.getMessage());
+    }
+}
