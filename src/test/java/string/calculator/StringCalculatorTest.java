@@ -90,4 +90,16 @@ public class StringCalculatorTest {
     public void testAdd_ManyNumbers_ReturnsSum() {
         assertEquals(3, stringCalculator.add("\\;\n1;2"));
     }
+
+    /**
+     * Tests the add method with a negative number separated by delimiters.
+     * Expected result: Throws InvalidInputException with negative numbers.
+     */
+    @Test
+    public void testAdd_ManyNumbersWithNegatives_ThrowsException() {
+        Exception exception = assertThrows(InvalidInputException.class, () -> {
+            stringCalculator.add("\\&,\n1,2&3&-14,-5");
+        });
+        assertEquals(ErrorMessages.INVALID_INPUT + "Negatives not allowed: -14, -5", exception.getMessage());
+    }
 }
