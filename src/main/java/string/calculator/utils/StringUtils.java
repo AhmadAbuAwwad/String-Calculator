@@ -40,8 +40,29 @@ public class StringUtils {
             }
         }
         addNumberStringToList(result, sb);
-
+        validateNegatives(result);
         return result;
+    }
+
+    /**
+     * Validates that the result list does not contain negative numbers.
+     * If negative numbers are found, throws an InvalidInputException with a message
+     * containing all negative numbers.
+     *
+     * @param result The list of integers to validate.
+     * @throws InvalidInputException If any negative number is found in the result list.
+     */
+    private static void validateNegatives(List<Integer> result) {
+        List<Integer> negativeNumbers = new ArrayList<>();
+        for (int number : result) {
+            if (number < 0)
+                negativeNumbers.add(number);
+        }
+        if (!negativeNumbers.isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Negatives not allowed: " + negativeNumbers.stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
     /**
