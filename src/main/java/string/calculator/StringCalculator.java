@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class StringCalculator {
 
     /**
-     * Adds 0-2 numbers provided in a comma-separated string.
+     * Adds numbers provided in a comma-separated string.
      *
      * @param numbers A string of numbers separated by commas.
      * @return The sum of the numbers.
@@ -25,14 +25,13 @@ public class StringCalculator {
         delimiters.add(',');
 
         List<Integer> numList = StringUtils.splitString(numbers, delimiters);
-        validateInput(numList);
 
         int sum = numList.stream().collect(Collectors.summingInt(Integer::intValue));
         return sum;
     }
 
     /**
-     * Validates the input array to not exceed 2 numbers.
+     * Validates the input array to not exceed 2 numbers used in step 1.
      *
      * @param numArray The array of numbers.
      * @throws InvalidInputException If the number of values exceeds 2.
