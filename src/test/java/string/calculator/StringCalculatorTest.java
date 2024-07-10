@@ -85,7 +85,7 @@ public class StringCalculatorTest {
      */
     @Test
     public void testAdd_ManyNumbers_ReturnsSum() {
-        assertEquals(3, stringCalculator.add("\\;\n1;2"));
+        assertEquals(15, stringCalculator.add("\\&,\n1&2&3&4,5"));
     }
 
     /**
@@ -107,5 +107,27 @@ public class StringCalculatorTest {
     @Test
     public void testAdd_NumberOver1000_IgnoredInSum() {
         assertEquals(3, stringCalculator.add("\\,\n2,1001,1"));
+    }
+
+    /**
+     * Tests the separateDelimitersAndInput method with multiple delimiters enclosed in square brackets.
+     * Expected result: The delimiters are correctly extracted and the input string is properly separated.
+     */
+    @Test
+    public void testSeparateDelimitersAndInput_ReturnsSum() {
+        assertEquals(600, stringCalculator.add("\\[*][,][&]\n100,200*300"));
+    }
+
+    /**
+     * Tests the add method with an invalid delimiter format.
+     * Expected result: Throws InvalidInputException with a message indicating
+     * invalid delimiter format.
+     */
+    @Test
+    public void testAdd_InvalidDelimiterFormat_ThrowsException() {
+        Exception exception = assertThrows(InvalidInputException.class, () -> {
+            stringCalculator.add("\\[&,][[]]%\n1,2&3");
+        });
+        assertEquals(ErrorMessages.INVALID_INPUT + "Invalid delimiter format", exception.getMessage());
     }
 }

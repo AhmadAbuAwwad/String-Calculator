@@ -6,6 +6,7 @@ import string.calculator.exception.InvalidInputException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class StringUtils {
@@ -75,6 +76,7 @@ public class StringUtils {
 
     /**
      * Separates delimiters and input string from the input based on the "\n" delimiter line.
+     * Handles multiple delimiters enclosed in square brackets.
      *
      * @param input The input string potentially containing delimiter specification.
      * @return An object containing the list of delimiters and the trimmed input string.
@@ -88,19 +90,60 @@ public class StringUtils {
             return new DelimiterAndInput(delimiters, input);
         }
 
-        if (input.contains("\n")) {
-            delimiters.addAll(input.substring(1, input.indexOf('\n')).chars()
-                    .mapToObj(c -> (char) c)
-                    .collect(Collectors.toList()));
-
-            if (input.length() == input.indexOf('\n') + 1) {
-                return new DelimiterAndInput(delimiters, "");
-            }
-
+        try {
+            String delimiterPart = input.substring(1, input.indexOf('\n'));
             input = input.substring(input.indexOf('\n') + 1);
-            return new DelimiterAndInput(delimiters, input);
+
+            if (delimiterPart.contains("[")) {
+                parseMultipleDelimiters(delimiterPart, delimiters);
+            } else {
+                for (char ch : delimiterPart.toCharArray()) {
+                    delimiters.add(ch);
+                }
+            }
+        } catch (Exception e) {
+            throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Invalid delimiter format");
         }
+
+        delimiters.add('\n');
         return new DelimiterAndInput(delimiters, input);
+    }
+
+    /**
+     * Parses multiple delimiters enclosed in square brackets and adds them to the delimiters list.
+     *
+     * @param delimiterPart The part of the input string containing the delimiters.
+     * @param delimiters    The list to add the parsed delimiters to.
+     * @throws InvalidInputException If the delimiter format is invalid.
+     */
+    private static void parseMultipleDelimiters(String delimiterPart, List<Character> delimiters) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder currentDelimiter = new StringBuilder();
+
+        for (char ch : delimiterPart.toCharArray()) {
+            if (ch == '[') {
+                if (!stack.isEmpty()) {
+                    throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Nested delimiters are not allowed");
+                }
+                stack.push(ch);
+            } else if (ch == ']') {
+                if (stack.isEmpty() || stack.pop() != '[') {
+                    throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Unmatched delimiter brackets");
+                }
+                for (char d : currentDelimiter.toString().toCharArray()) {
+                    delimiters.add(d);
+                }
+                currentDelimiter.setLength(0);
+            } else {
+                if (!stack.isEmpty()) {
+                    currentDelimiter.append(ch);
+                }
+            }
+        }
+
+        if (!stack.isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Unmatched delimiter brackets");
+        }
     }
 
     /**
