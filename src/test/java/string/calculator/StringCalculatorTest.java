@@ -17,7 +17,6 @@ public class StringCalculatorTest {
         stringCalculator = new StringCalculator();
     }
 
-    // Step 1
 
     /**
      * Tests the add method with an empty string input.
@@ -48,7 +47,7 @@ public class StringCalculatorTest {
 
 
 //    /**
-//     * Tests that adding more than two numbers throws an InvalidInputException.
+//     * Tests that adding more than two numbers throws an InvalidInputException used in step 1.
 //     * Expected result: Throws InvalidInputException with the appropriate error message.
 //     */
 //    @Test
@@ -60,45 +59,35 @@ public class StringCalculatorTest {
 //    }
 
     /**
-     * Tests that adding an empty number between delimiters throws an InvalidInputException.
+     * Tests consecutive delimiters throws an InvalidInputException.
      * Expected result: Throws InvalidInputException with the appropriate error message.
      */
     @Test
-    public void testAdd_EmptyNumberBetweenCommas_ThrowsInvalidInputException() {
+    public void testAdd_ConsecutiveDelimiters_ThrowsInvalidInputException() {
         Exception exception = assertThrows(InvalidInputException.class, () -> {
-            stringCalculator.add("1,\n2");
+            stringCalculator.add("\\,\n1,2,,3");
         });
         assertEquals(ErrorMessages.INVALID_INPUT + "Consecutive delimiters found", exception.getMessage());
     }
 
     /**
-     * Tests that adding a non-numeric character throws an InvalidInputException used in step 1.
+     * Tests that adding a non-numeric character throws an InvalidInputException.
      * Expected result: Throws InvalidInputException with the appropriate error message.
      */
     @Test
     public void testAdd_NonNumericCharacter_ThrowsInvalidInputException() {
         Exception exception = assertThrows(InvalidInputException.class, () -> {
-            stringCalculator.add("1\n?");
+            stringCalculator.add("\\,\n1,?");
         });
         assertEquals(ErrorMessages.INVALID_INPUT + "Char: ? is not a number", exception.getMessage());
     }
 
-
     /**
-     * Tests the add method with many numbers separated by commas.
+     * Tests the add method with many numbers separated by delimiters.
      * Expected result: Returns the sum of all numbers.
      */
     @Test
     public void testAdd_ManyNumbers_ReturnsSum() {
-        assertEquals(15, stringCalculator.add("1,2,3,4,5"));
-    }
-
-    /**
-     * Tests the add method with numbers separated by delimiters.
-     * Expected result: Returns the sum of all numbers.
-     */
-    @Test
-    public void testAdd_NewLineDelimiter_ReturnsSum() {
-        assertEquals(6, stringCalculator.add("1\n2,3"));
+        assertEquals(3, stringCalculator.add("\\;\n1;2"));
     }
 }

@@ -5,6 +5,7 @@ import string.calculator.exception.InvalidInputException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StringUtils {
 
@@ -19,7 +20,9 @@ public class StringUtils {
         List<Integer> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
 
-        input = trimLeadingDelimiters(input, delimiters);
+        DelimiterAndInput delimiterAndInput = separateDelimitersAndInput(input);
+        input = delimiterAndInput.getInput();
+        delimiters = delimiterAndInput.getDelimiters();
 
         boolean lastWasDelimiter = false;
         for (char ch : input.toCharArray()) {
@@ -57,20 +60,33 @@ public class StringUtils {
     }
 
     /**
-     * Trims leading delimiter characters from the input string.
+     * Separates delimiters and input string from the input based on the "\n" delimiter line.
      *
-     * @param input      The string to be trimmed.
-     * @param delimiters A list of characters used as delimiters.
-     * @return The trimmed string.
+     * @param input The input string potentially containing delimiter specification.
+     * @return An object containing the list of delimiters and the trimmed input string.
+     * @throws InvalidInputException If the string format is invalid and not separated by new lines.
      */
-    private static String trimLeadingDelimiters(String input, List<Character> delimiters) {
-        char[] charArray = input.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            if (!delimiters.contains(charArray[i])) {
-                return input.substring(i);
-            }
+    private static DelimiterAndInput separateDelimitersAndInput(String input) {
+        List<Character> delimiters = new ArrayList<>();
+        if (!input.startsWith("\\")) {
+            delimiters.add(',');
+            delimiters.add('\n');
+            return new DelimiterAndInput(delimiters, input);
         }
-        return input;
+
+        if (input.contains("\n")) {
+            delimiters.addAll(input.substring(1, input.indexOf('\n')).chars()
+                    .mapToObj(c -> (char) c)
+                    .collect(Collectors.toList()));
+
+            if (input.length() == input.indexOf('\n') + 1) {
+                return new DelimiterAndInput(delimiters, "");
+            }
+
+            input = input.substring(input.indexOf('\n') + 1);
+            return new DelimiterAndInput(delimiters, input);
+        }
+        return new DelimiterAndInput(delimiters, input);
     }
 
     /**
