@@ -21,11 +21,7 @@ public class StringCalculator {
             return 0;
         }
 
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(',');
-        delimiters.add('\n');
-
-        List<Integer> numList = StringUtils.splitString(numbers, delimiters);
+        List<Integer> numList = StringUtils.splitString(numbers);
 
         int sum = numList.stream().collect(Collectors.summingInt(Integer::intValue));
         return sum;

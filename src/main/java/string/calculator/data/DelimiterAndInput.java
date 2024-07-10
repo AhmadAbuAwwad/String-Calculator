@@ -1,4 +1,4 @@
-package string.calculator.utils;
+package string.calculator.data;
 
 import java.util.List;
 
