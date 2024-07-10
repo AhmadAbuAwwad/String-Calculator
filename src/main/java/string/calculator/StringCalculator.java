@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 public class StringCalculator {
 
     /**
-     * Adds numbers provided in a comma-separated string.
+     * Adds numbers provided in a string separated by commas or new lines.
      *
-     * @param numbers A string of numbers separated by commas.
+     * @param numbers A string of numbers separated by commas or new lines.
      * @return The sum of the numbers.
      */
     public int add(String numbers) {
@@ -23,6 +23,7 @@ public class StringCalculator {
 
         List<Character> delimiters = new ArrayList<>();
         delimiters.add(',');
+        delimiters.add('\n');
 
         List<Integer> numList = StringUtils.splitString(numbers, delimiters);
 

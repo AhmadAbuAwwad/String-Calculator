@@ -2,7 +2,6 @@ package string.calculator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import string.calculator.StringCalculator;
 import string.calculator.exception.ErrorMessages;
 import string.calculator.exception.InvalidInputException;
 
@@ -61,13 +60,13 @@ public class StringCalculatorTest {
 //    }
 
     /**
-     * Tests that adding an empty number between commas throws an InvalidInputException.
+     * Tests that adding an empty number between delimiters throws an InvalidInputException.
      * Expected result: Throws InvalidInputException with the appropriate error message.
      */
     @Test
     public void testAdd_EmptyNumberBetweenCommas_ThrowsInvalidInputException() {
         Exception exception = assertThrows(InvalidInputException.class, () -> {
-            stringCalculator.add("1,,2");
+            stringCalculator.add("1,\n2");
         });
         assertEquals(ErrorMessages.INVALID_INPUT + "Consecutive delimiters found", exception.getMessage());
     }
@@ -79,7 +78,7 @@ public class StringCalculatorTest {
     @Test
     public void testAdd_NonNumericCharacter_ThrowsInvalidInputException() {
         Exception exception = assertThrows(InvalidInputException.class, () -> {
-            stringCalculator.add("1,?");
+            stringCalculator.add("1\n?");
         });
         assertEquals(ErrorMessages.INVALID_INPUT + "Char: ? is not a number", exception.getMessage());
     }
@@ -92,5 +91,14 @@ public class StringCalculatorTest {
     @Test
     public void testAdd_ManyNumbers_ReturnsSum() {
         assertEquals(15, stringCalculator.add("1,2,3,4,5"));
+    }
+
+    /**
+     * Tests the add method with numbers separated by delimiters.
+     * Expected result: Returns the sum of all numbers.
+     */
+    @Test
+    public void testAdd_NewLineDelimiter_ReturnsSum() {
+        assertEquals(6, stringCalculator.add("1\n2,3"));
     }
 }
