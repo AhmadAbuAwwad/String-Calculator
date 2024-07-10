@@ -1,5 +1,6 @@
 package string.calculator.utils;
 
+import string.calculator.data.DelimiterAndInput;
 import string.calculator.exception.ErrorMessages;
 import string.calculator.exception.InvalidInputException;
 
@@ -12,30 +13,22 @@ public class StringUtils {
     /**
      * Splits the input string by a list of delimiters.
      *
-     * @param input      The string to be split.
-     * @param delimiters A list of characters used to split the string.
+     * @param input The string to be split.
      * @return An array of strings split by the delimiters.
      */
-    public static List<Integer> splitString(String input, List<Character> delimiters) {
+    public static List<Integer> splitString(String input) {
         List<Integer> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
 
         DelimiterAndInput delimiterAndInput = separateDelimitersAndInput(input);
         input = delimiterAndInput.getInput();
-        delimiters = delimiterAndInput.getDelimiters();
+        List<Character> delimiters = delimiterAndInput.getDelimiters();
 
-        boolean lastWasDelimiter = false;
         for (char ch : input.toCharArray()) {
             if (delimiters.contains(ch)) {
-                if (lastWasDelimiter) {
-                    throw new InvalidInputException(ErrorMessages.INVALID_INPUT + "Consecutive delimiters found");
-                }
-                lastWasDelimiter = true;
-
                 addNumberStringToList(result, sb);
                 sb.setLength(0);
             } else {
-                lastWasDelimiter = false;
                 sb.append(ch);
             }
         }

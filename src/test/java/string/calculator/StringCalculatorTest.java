@@ -59,15 +59,12 @@ public class StringCalculatorTest {
 //    }
 
     /**
-     * Tests consecutive delimiters throws an InvalidInputException.
-     * Expected result: Throws InvalidInputException with the appropriate error message.
+     * Tests consecutive delimiters to return a result.
+     * Expected result: Returns the sum of the two numbers.
      */
     @Test
-    public void testAdd_ConsecutiveDelimiters_ThrowsInvalidInputException() {
-        Exception exception = assertThrows(InvalidInputException.class, () -> {
-            stringCalculator.add("\\,\n1,2,,3");
-        });
-        assertEquals(ErrorMessages.INVALID_INPUT + "Consecutive delimiters found", exception.getMessage());
+    public void testAdd_ConsecutiveDelimiters_ReturnsSum() {
+        assertEquals(300, stringCalculator.add(",\n100,,,,,,,,200"));
     }
 
     /**
