@@ -102,4 +102,13 @@ public class StringCalculatorTest {
         });
         assertEquals(ErrorMessages.INVALID_INPUT + "Negatives not allowed: -14, -5", exception.getMessage());
     }
+
+    /**
+     * Tests the add method with a number greater than 1000.
+     * Expected result: Numbers greater than 1000 are ignored in the sum.
+     */
+    @Test
+    public void testAdd_NumberOver1000_IgnoredInSum() {
+        assertEquals(3, stringCalculator.add("\\,\n2,1001,1"));
+    }
 }

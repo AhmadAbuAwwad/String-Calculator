@@ -111,7 +111,8 @@ public class StringUtils {
     }
 
     /**
-     * Adds the substring to the result list as a number if it's not empty.
+     * Adds the substring to the result list as a number if it's not empty and
+     * the number is <= 1000.
      *
      * @param result The list to add the number to.
      * @param sb     The StringBuilder containing the substring representing a number.
@@ -119,7 +120,10 @@ public class StringUtils {
      */
     private static void addNumberStringToList(List<Integer> result, StringBuilder sb) throws InvalidInputException {
         if (!sb.isEmpty()) {
-            result.add(parseString(sb.toString()));
+            int number = parseString(sb.toString());
+            if (number <= 1000) {
+                result.add(number);
+            }
         }
     }
 }
